@@ -1,18 +1,5 @@
 {
   "projects": {
     "default": "angular-poc-75e76"
-  },
-  "targets": {
-    "angular-poc-75e76": {
-      "hosting": {
-        "v1": [
-          "angular-poc-75e76-v1"
-        ],
-        "v2": [
-          "angular-poc-75e76-v2"
-        ]
-      }
-    }
-  },
-  "etags": {}
+  }
 }
