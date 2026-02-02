@@ -367,6 +367,204 @@ angular-multi-version-poc/
 
 ---
 
+## Branch-Based Deployment Setup
+
+### 12. Restructuring to Branch-Based Deployment
+
+The project was restructured to use separate Git branches for each version, providing a cleaner workflow where each branch deploys to its respective Firebase hosting site.
+
+**Goal:**
+- `v1` branch → deploys to `angular-poc-75e76-v1.web.app`
+- `v2` branch → deploys to `angular-poc-75e76-v2.web.app`
+
+---
+
+### 13. Creating v1 Branch
+
+**Commands:**
+```bash
+git checkout -b v1
+```
+
+**Changes Made:**
+1. Updated `src/environments/environment.ts` with v1 config (blue theme, 3 features)
+2. Removed `environment.v1.ts` and `environment.v2.ts` (no longer needed)
+3. Simplified `angular.json` - removed v1/v2 build configurations
+4. Simplified `firebase.json` - single site targeting `angular-poc-75e76-v1`
+5. Simplified `package.json` scripts
+
+#### v1 Branch: `src/environments/environment.ts`
+```typescript
+export const environment = {
+  production: true,
+  version: '1.0.0',
+  versionName: 'Version 1',
+  theme: {
+    primary: '#1976d2',
+    accent: '#2196f3',
+    name: 'blue'
+  },
+  features: ['Dashboard', 'Reports', 'Settings']
+};
+```
+
+#### v1 Branch: `firebase.json`
+```json
+{
+  "hosting": {
+    "site": "angular-poc-75e76-v1",
+    "public": "dist/angular-multi-version-poc/browser",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  }
+}
+```
+
+#### v1 Branch: `package.json` (scripts)
+```json
+{
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "deploy": "ng build && firebase deploy",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  }
+}
+```
+
+**Commit:**
+```
+Configure v1 branch for Version 1 deployment
+
+- Set environment to v1 (blue theme, 3 features)
+- Simplify configs for single-version deployment
+- Deploy target: angular-poc-75e76-v1.web.app
+```
+
+---
+
+### 14. Creating v2 Branch
+
+**Commands:**
+```bash
+git checkout master
+git checkout -b v2
+```
+
+**Changes Made:**
+1. Updated `src/environments/environment.ts` with v2 config (green theme, 5 features)
+2. Removed `environment.v1.ts` and `environment.v2.ts`
+3. Simplified `angular.json`
+4. Simplified `firebase.json` - single site targeting `angular-poc-75e76-v2`
+5. Simplified `package.json` scripts
+
+#### v2 Branch: `src/environments/environment.ts`
+```typescript
+export const environment = {
+  production: true,
+  version: '2.0.0',
+  versionName: 'Version 2',
+  theme: {
+    primary: '#388e3c',
+    accent: '#4caf50',
+    name: 'green'
+  },
+  features: ['Dashboard', 'Reports', 'Settings', 'Analytics', 'API Access']
+};
+```
+
+#### v2 Branch: `firebase.json`
+```json
+{
+  "hosting": {
+    "site": "angular-poc-75e76-v2",
+    "public": "dist/angular-multi-version-poc/browser",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  }
+}
+```
+
+**Commit:**
+```
+Configure v2 branch for Version 2 deployment
+
+- Set environment to v2 (green theme, 5 features)
+- Simplify configs for single-version deployment
+- Deploy target: angular-poc-75e76-v2.web.app
+```
+
+---
+
+### 15. Pushing Branches to GitHub
+
+**Commands:**
+```bash
+git push -u origin v1
+git push -u origin v2
+```
+
+**Result:**
+- Branch `v1` pushed to https://github.com/rohitj559/angular-multi-version-poc/tree/v1
+- Branch `v2` pushed to https://github.com/rohitj559/angular-multi-version-poc/tree/v2
+
+---
+
+### 16. Branch-Based Deployment
+
+**Deploy v1:**
+```bash
+git checkout v1
+npm run deploy
+```
+
+**Deploy v2:**
+```bash
+git checkout v2
+npm run deploy
+```
+
+**Deployment Results:**
+- v1 deployed to https://angular-poc-75e76-v1.web.app
+- v2 deployed to https://angular-poc-75e76-v2.web.app
+
+---
+
+## Final Branch Structure
+
+| Branch | Theme | Features | Firebase Site | URL |
+|--------|-------|----------|---------------|-----|
+| `v1` | Blue | 3 | angular-poc-75e76-v1 | https://angular-poc-75e76-v1.web.app |
+| `v2` | Green | 5 | angular-poc-75e76-v2 | https://angular-poc-75e76-v2.web.app |
+| `master` | - | - | - | Contains original multi-version setup |
+
+---
+
+## GitHub Repository
+
+**Repository:** https://github.com/rohitj559/angular-multi-version-poc
+
+**Branches:**
+- `master` - Original setup with both versions in one branch
+- `v1` - Version 1 (blue theme) - https://github.com/rohitj559/angular-multi-version-poc/tree/v1
+- `v2` - Version 2 (green theme) - https://github.com/rohitj559/angular-multi-version-poc/tree/v2
+
+---
+
+## Simplified Commands (Branch-Based)
+
+| Action | Command |
+|--------|---------|
+| Switch to v1 | `git checkout v1` |
+| Switch to v2 | `git checkout v2` |
+| Deploy current branch | `npm run deploy` |
+| Serve locally | `npm run start` |
+| Build only | `npm run build` |
+
+---
+
 ## Key Learnings
 
 1. **Firebase Project IDs** have a random suffix (e.g., `angular-poc-75e76` instead of `angular-poc`)
@@ -374,7 +572,9 @@ angular-multi-version-poc/
 3. **Deploy Targets** map logical names (v1, v2) to actual site names
 4. **Angular File Replacements** allow swapping environment files at build time
 5. **Separate Output Paths** keep builds isolated (`dist/v1`, `dist/v2`)
+6. **Branch-Based Deployment** provides cleaner workflow - each branch has its own config
+7. **Simplified Scripts** - `npm run deploy` works on any branch without version-specific commands
 
 ---
 
-*Generated by Claude Code on February 1, 2026*
+*Generated by Claude Code on February 1-2, 2026*
