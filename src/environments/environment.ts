@@ -1,11 +1,11 @@
 export const environment = {
-  production: false,
-  version: '1.0.0',
-  versionName: 'Version 1',
+  production: true,
+  version: '2.0.0',
+  versionName: 'Version 2',
   theme: {
-    primary: '#1976d2',
-    accent: '#2196f3',
-    name: 'blue'
+    primary: '#388e3c',
+    accent: '#4caf50',
+    name: 'green'
   },
-  features: ['Dashboard', 'Reports', 'Settings']
+  features: ['Dashboard', 'Reports', 'Settings', 'Analytics', 'API Access']
 };
