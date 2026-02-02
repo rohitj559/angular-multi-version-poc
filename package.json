@@ -4,7 +4,15 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:v1": "ng serve --configuration=v1",
+    "start:v2": "ng serve --configuration=v2",
     "build": "ng build",
+    "build:v1": "ng build --configuration=v1",
+    "build:v2": "ng build --configuration=v2",
+    "build:all": "npm run build:v1 && npm run build:v2",
+    "deploy:v1": "firebase deploy --only hosting:v1",
+    "deploy:v2": "firebase deploy --only hosting:v2",
+    "deploy:all": "npm run build:all && firebase deploy --only hosting",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
